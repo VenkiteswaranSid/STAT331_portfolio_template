@@ -48,7 +48,12 @@ military <- read_xlsx(here::here("data",
 
 ```{r}
 #| label: wd-1-txt
-
+## This code came from Check-In 2.3 Question 4
+ages_mystery <- read_delim(file = here::here("Week 2", 
+                                             "Check-ins", 
+                                             "Ages_Data", 
+                                             "ages_mystery.txt"), 
+                           delim = "|")
 ```
 
 **WD-2: I can select necessary columns from a dataset.**
@@ -249,14 +254,45 @@ military_clean <- anti_join(military,
 
 ```{r}
 #| label: wd-7-long
-
+## This code comes from Lab 4 Question 6
+ca_childcare |>
+  pivot_longer(cols = mc_infant:mc_preschool,
+               names_to = "childcare_level",
+               values_to = "median_cost") |>
+  ggplot(mapping = aes(
+    x = study_year,
+    y = median_cost,
+    colour = region
+  )) +
+  geom_point() +
+  geom_smooth() +
+  facet_wrap(.~ childcare_level,
+             nrow = 1,
+             labeller = labeller(childcare_level = 
+                                   c("mc_infant" = "Infant",
+                                     "mc_preschool" = "Preschool",
+                                     "mc_toddler" = "Toddler"))) + 
+  scale_y_continuous(limits = c(100, 500)) +
+  scale_x_continuous(breaks = seq(2008, 2018, by = 2)) +
+  theme(axis.text.x = element_text(size = 6)) +
+  labs(title = "Weekly Median Price for Center-Based Childcare ($)",
+       x = "Study Year",
+       y = NULL,
+       color = "California Region")
 ```
 
 -   `pivot_wider()`
 
 ```{r}
 #| label: wd-7-wide
-
+## This code comes from Lab 4 Question 4
+ca_childcare |>
+  filter(study_year == 2008 |
+           study_year == 2018) |>
+  group_by(region, study_year) |>
+  summarise(median_income = median(mhi_2018)) |>
+  pivot_wider(names_from = study_year, values_from = median_income) |>
+  arrange(by = `2018`)
 ```
 
 ## Reproducibility
@@ -271,14 +307,29 @@ I've done this in the following provided assignments:
 
 ```{r}
 #| label: r-2-1
-
+## This code comes from Lab 4 Question 7
+ggplot(ca_childcare, aes(x = mhi_2018, 
+                         y = mc_infant)) +
+  geom_point() +
+  geom_smooth(method = "lm",
+              se = FALSE) +
+  labs(title = "Median Household Income Compared to the Weekly Price for Infants in Childcare", 
+       x = "Median Household Income ($ in 2018)",
+       y = "Median Weekly Infant Care Cost ($)")
 ```
 
 -   Example of **dplyr** pipeline
 
 ```{r}
 #| label: r-2-2
-
+## This code comes from Lab 4 Question 4
+ca_childcare |>
+  filter(study_year == 2008 |
+           study_year == 2018) |>
+  group_by(region, study_year) |>
+  summarise(median_income = median(mhi_2018)) |>
+  pivot_wider(names_from = study_year, values_from = median_income) |>
+  arrange(by = `2018`)
 ```
 
 -   Example of function formatting
@@ -294,7 +345,13 @@ I've done this in the following provided assignments:
 
 ```{r}
 #| label: r-3-example
-
+## This code comes from Lab 3 Question 10
+teacher_evals_clean |>
+  filter(question_no == 901) |>
+  group_by(teacher_id) |>
+  summarise(mean_score = mean(SET_score_avg)) |>
+  arrange(desc(mean_score)) |>
+  slice(c(1, n()))
 ```
 
 -   Example of function stops
@@ -326,7 +383,20 @@ I've done this in the following provided assignments:
 
 ```{r}
 #| label: dvs-2-cat
-
+## This code comes from Lab 3 Question 2
+ggplot(data = teacher_evals_compare,
+       mapping = aes(
+         x = sen_level,
+         fill = SET_level
+         )) +
+  geom_bar() + 
+  labs(x = "Seniority of Instructor",
+       y = NULL,
+       subtitle = "Number of Sections",
+       fill = "SET Level") +
+  theme_minimal() + 
+  scale_fill_manual(values = c("Excellent" = "steelblue",
+                               "Standard" = "orange"))
 ```
 
 -   dates (timeseries plot)
@@ -342,21 +412,74 @@ I've done this in the following provided assignments:
 
 ```{r}
 #| label: dvs-2-1
-
+## This code comes from Challenge 2 Medium
+ggplot(data = surveys, 
+       mapping = aes(
+         x = weight, 
+         y = species, 
+         group = species)) + 
+  geom_jitter(color = "steelblue", 
+              alpha = 0.3) + 
+  geom_density_ridges(fill = "red") + 
+  labs(title = "Density Plots of Species of Rodent by Their Weight", 
+       x = "Weight (g)", 
+       y = NULL, 
+       subtitle = "Rodent Species") +
+  theme(axis.text.x = element_text(angle = 45),
+        axis.text.y = element_text(angle = 45))
 ```
 
 -   I can modify the text in my plot to be more readable
 
 ```{r}
 #| label: dvs-2-2
-
+## This code came from Challenge 2 Medium
+## Create the density plot
+ggplot(data = surveys, 
+       mapping = aes(
+         x = weight, 
+         y = species, 
+         group = species)) + 
+  geom_jitter(color = "steelblue", 
+              alpha = 0.3) + 
+  geom_density_ridges(fill = "red") + 
+  labs(title = "Density Plots of Species of Rodent by Their Weight", 
+       x = "Weight (g)", 
+       y = NULL, 
+       subtitle = "Rodent Species") +
+  theme(axis.text.x = element_text(angle = 45),
+        axis.text.y = element_text(angle = 45))
 ```
 
 -   I can reorder my legend to align with the colors in my plot
 
 ```{r}
 #| label: dvs-2-3
-
+## This code comes from Lab 4 Question 6
+ca_childcare |>
+  pivot_longer(cols = mc_infant:mc_preschool,
+               names_to = "childcare_level",
+               values_to = "median_cost") |>
+  ggplot(mapping = aes(
+    x = study_year,
+    y = median_cost,
+    colour = region
+  )) +
+  geom_point() +
+  geom_smooth() +
+  facet_wrap(.~ childcare_level,
+             nrow = 1,
+             labeller = labeller(childcare_level = 
+                                   c("mc_infant" = "Infant",
+                                     "mc_preschool" = "Preschool",
+                                     "mc_toddler" = "Toddler"))) + 
+  scale_y_continuous(limits = c(100, 500)) +
+  scale_x_continuous(breaks = seq(2008, 2018, by = 2)) +
+  theme(axis.text.x = element_text(size = 6)) +
+  labs(title = "Weekly Median Price for Center-Based Childcare ($)",
+       x = "Study Year",
+       y = NULL,
+       color = "California Region")
 ```
 
 **DVS-3: I show creativity in my visualizations**
@@ -388,14 +511,29 @@ I've done this in the following provided assignments:
 
 ```{r}
 #| label: dvs-4-summarize
-
+## This code comes from Lab 3 Question 8
+teacher_evals_clean |> 
+  select(academic_degree, 
+         seniority, 
+         sex,
+         teacher_id) |>
+  group_by(sex, 
+           academic_degree) |>
+  summarise(med_seniority = median(seniority),
+            num_teachers = n_distinct(teacher_id))
 ```
 
 -   Example using `across()`
 
 ```{r}
 #| label: dvs-4-across
-
+## This code comes from Lab 3 Question 7, but R recommended that I use if_any() instead of across() because it was more up to date
+teacher_evals_clean |> 
+  filter(
+    if_any(.cols = course_id:sex,
+           .fns = ~ is.na(.x)
+    )
+  )
 ```
 
 **DVS-5: I can find summaries of variables across multiple groups.**
@@ -454,7 +592,14 @@ I've done this in the following provided assignments:
 
 ```{r}
 #| label: pe-1-one-call
-
+## This code comes from Lab 3 Question 12
+teacher_evals_clean |> 
+  filter(sex == "female",
+         academic_degree %in% c("dr", "ma")) |>
+  group_by(teacher_id) |>
+  summarise(mean_resp = mean(resp_share)) |>
+  arrange(desc(mean_resp)) |>
+  slice(c(1, n()))
 ```
 
 -   `across()`

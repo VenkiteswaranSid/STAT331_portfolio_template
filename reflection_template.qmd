@@ -1,6 +1,6 @@
 ---
 title: "STAT 331 Portfolio"
-author: "Your Name Goes Here"
+author: "Siddharth Venkiteswaran"
 format: 
   html: 
     self-contained: true
@@ -11,7 +11,7 @@ execute:
   echo: true
 ---
 
-[**My Grade:**]{.underline} I believe my grade equivalent to course work evidenced below to be an __.
+[**My Grade:**]{.underline} I believe my grade equivalent to course work evidenced below to be an \_\_.
 
 [**Learning Objective Evidence:**]{.underline} In the code chunks below, provide code from Lab or Challenge assignments where you believe you have demonstrated proficiency with the specified learning target. Be sure to specify **where** the code came from (e.g., Lab 4 Question 2).
 
@@ -23,14 +23,25 @@ execute:
 
 ```{r}
 #| label: wd-1-csv
-
+## This line of code came from Lab 2 Question 1
+surveys <- read_csv(file = here::here("data", 
+                                      "surveys.csv"), 
+                    show_col_types = FALSE)
 ```
 
 -   `xlsx`
 
 ```{r}
 #| label: wd-1-xlsx
-
+## This line of code came from Practice Activity 4 Question 3
+military <- read_xlsx(here::here("data", 
+                                 "gov_spending_per_capita.xlsx"), 
+                      sheet = "Share of Govt. spending", 
+                      skip  = 7, 
+                      n_max = 190, 
+                      na = c(". .", 
+                             "xxx")
+                      )
 ```
 
 -   `txt`
@@ -44,7 +55,21 @@ execute:
 
 ```{r}
 #| label: wd-2
-
+## This code came from Lab 3 Question 5
+teacher_evals_clean <- teachers |> 
+  select(course_id,
+         teacher_id,
+         question_no,
+         no_participants,
+         resp_share,
+         SET_score_avg,
+         percent_failed_cur,
+         academic_degree,
+         seniority,
+         gender) |>
+  rename(sex = gender) |>
+  filter(no_participants >= 10) |> 
+  mutate(teacher_id = as.character(teacher_id))
 ```
 
 **WD-3: I can filter rows from a dataframe for a *variety* of data types (e.g., numeric, integer, character, factor, date).**
@@ -53,14 +78,30 @@ execute:
 
 ```{r}
 #| label: wd-3-numeric
-
+## This code came from Lab 3 Question 9
+teacher_evals_clean |>
+  group_by(course_id, teacher_id) |>
+  summarise(questions_asked = n_distinct(question_no)) |> 
+  filter(questions_asked == 9) |> 
+  dim()
 ```
 
 -   character -- specifically a string (example must use functions from **stringr**)
 
 ```{r}
 #| label: wd-3-string
-
+## This came from Lab 5 in the section "Finding a Suspect"
+get_fit_now_member |>
+  full_join(get_fit_now_check_in,
+            by = join_by("id" == "membership_id")) |>
+  filter(membership_status == "gold",
+         str_detect(id, "48Z."),
+         ymd(check_in_date) == "2018-01-09") |>
+  inner_join(person,
+            by = join_by("person_id" == "id")) |>
+  inner_join(drivers_license,
+             by = join_by("license_id" == "id")) |>
+  pull(name.x)
 ```
 
 -   factor
@@ -74,7 +115,17 @@ execute:
 
 ```{r}
 #| label: wd-3-date
-
+get_fit_now_member |>
+  full_join(get_fit_now_check_in,
+            by = join_by("id" == "membership_id")) |>
+  filter(membership_status == "gold",
+         str_detect(id, "48Z."),
+         ymd(check_in_date) == "2018-01-09") |>
+  inner_join(person,
+            by = join_by("person_id" == "id")) |>
+  inner_join(drivers_license,
+             by = join_by("license_id" == "id")) |>
+  pull(name.x)
 ```
 
 **WD-4: I can modify existing variables and create new variables in a dataframe for a *variety* of data types (e.g., numeric, integer, character, factor, date).**
@@ -97,7 +148,19 @@ execute:
 
 ```{r}
 #| label: wd-4-factor
-
+## This code came from Lab 4 Question 3
+ca_childcare <- ca_childcare |>
+  mutate(region = fct_collapse(county_name,
+                               "Superior California" = c("Butte County", "Colusa County", "El Dorado County", "Glenn County", "Lassen County", "Modoc County", "Nevada County", "Placer County", "Plumas County", "Sacramento County", "Shasta County", "Sierra County", "Siskiyou County", "Sutter County", "Tehama County", "Yolo County", "Yuba County"),
+                               "North Coast" = c("Del Norte County", "Humboldt County", "Lake County", "Mendocino County", "Napa County", "Sonoma County", "Trinity County"),
+                               "San Francisco Bay Area" = c("Alameda County", "Contra Costa County", "Marin County", "San Francisco County", "San Mateo County", "Santa Clara County", "Solano County"),
+                               "Northern San Joaquin Valley" = c("Alpine County", "Amador County", "Calaveras County", "Madera County", "Mariposa County", "Merced County", "Mono County", "San Joaquin County", "Stanislaus County", "Tuolumne County"),
+                               "Central Coast" = c("Monterey County", "San Benito County", "San Luis Obispo County", "Santa Barbara County", "Santa Cruz County", "Ventura County"),
+                               "Southern San Joaquin Valley" = c("Fresno County", "Inyo County", "Kern County", "Kings County", "Tulare County"),
+                               "Inland Empire" = c("Riverside County", "San Bernardino County"),
+                               "Los Angeles County" = c("Los Angeles County"), 
+                               "Orange County" = c("Orange County"), 
+                               "San Diego - Imperial" = c("San Diego County", "Imperial County")))
 ```
 
 -   date (example must use functions from **lubridate**)
@@ -127,14 +190,38 @@ execute:
 
 ```{r}
 #| label: wd-5-inner
-
+## This code came from Lab 5 in the section "Finding a Suspect"
+get_fit_now_member |>
+  full_join(get_fit_now_check_in,
+            by = join_by("id" == "membership_id")) |>
+  filter(membership_status == "gold",
+         str_detect(id, "48Z."),
+         ymd(check_in_date) == "2018-01-09") |>
+  inner_join(person,
+            by = join_by("person_id" == "id")) |>
+  inner_join(drivers_license,
+             by = join_by("license_id" == "id")) |>
+  pull(name.x)
 ```
 
 -   `full_join()`
 
 ```{r}
 #| label: wd-5-full
-
+## This came from Lab 5 in the "Finding the Real Culprit" section
+person |>
+  full_join(drivers_license,
+            by = join_by("license_id" == "id")) |>
+  full_join(facebook_event_checkin,
+            by = join_by("id" == "person_id")) |>
+  full_join(income,
+            by = join_by("ssn" == "ssn")) |>
+  filter(height == c(65:67),
+         hair_color == "red",
+         car_make == "Tesla",
+         car_model == "Model S",
+         str_detect(event_name, "SQL Symphony")) |>
+  pull(name)
 ```
 
 **WD-6: I can use filtering joins to filter rows from a dataframe.**
@@ -150,7 +237,10 @@ execute:
 
 ```{r}
 #| label: wd-6-anti
-
+## This code comes from Practice Activity 4 Question 4
+military_clean <- anti_join(military, 
+                            cont_region,
+                            by = join_by(Country == Region))
 ```
 
 **WD-7: I can pivot dataframes from long to wide and visa versa**

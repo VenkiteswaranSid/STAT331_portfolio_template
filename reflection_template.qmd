@@ -120,6 +120,7 @@ get_fit_now_member |>
 
 ```{r}
 #| label: wd-3-date
+## This came from Lab 5 in the section "Finding a Suspect"
 get_fit_now_member |>
   full_join(get_fit_now_check_in,
             by = join_by("id" == "membership_id")) |>
@@ -146,7 +147,20 @@ get_fit_now_member |>
 
 ```{r}
 #| label: wd-4-string
-
+## This code came from Lab 4 Question 3
+ca_childcare <- ca_childcare |>
+  mutate(county_name = str_remove(county_name, " County")) |>
+  mutate(region = fct_collapse(county_name,
+                               "Superior California" = c("Butte", "Colusa", "El Dorado", "Glenn", "Lassen", "Modoc", "Nevada", "Placer", "Plumas", "Sacramento", "Shasta", "Sierra", "Siskiyou", "Sutter", "Tehama", "Yolo", "Yuba"),
+                               "North Coast" = c("Del Norte", "Humboldt", "Lake", "Mendocino", "Napa", "Sonoma", "Trinity"),
+                               "San Francisco Bay Area" = c("Alameda", "Contra Costa", "Marin", "San Francisco", "San Mateo", "Santa Clara", "Solano"),
+                               "Northern San Joaquin Valley" = c("Alpine", "Amador", "Calaveras", "Madera", "Mariposa", "Merced", "Mono", "San Joaquin", "Stanislaus", "Tuolumne"),
+                               "Central Coast" = c("Monterey", "San Benito", "San Luis Obispo", "Santa Barbara", "Santa Cruz", "Ventura"),
+                               "Southern San Joaquin Valley" = c("Fresno", "Inyo", "Kern", "Kings", "Tulare"),
+                               "Inland Empire" = c("Riverside", "San Bernardino"),
+                               "Los Angeles County" = c("Los Angeles"), 
+                               "Orange County" = c("Orange"), 
+                               "San Diego - Imperial" = c("San Diego", "Imperial")))
 ```
 
 -   factor (example must use functions from **forcats**)
@@ -155,17 +169,18 @@ get_fit_now_member |>
 #| label: wd-4-factor
 ## This code came from Lab 4 Question 3
 ca_childcare <- ca_childcare |>
+  mutate(county_name = str_remove(county_name, " County")) |>
   mutate(region = fct_collapse(county_name,
-                               "Superior California" = c("Butte County", "Colusa County", "El Dorado County", "Glenn County", "Lassen County", "Modoc County", "Nevada County", "Placer County", "Plumas County", "Sacramento County", "Shasta County", "Sierra County", "Siskiyou County", "Sutter County", "Tehama County", "Yolo County", "Yuba County"),
-                               "North Coast" = c("Del Norte County", "Humboldt County", "Lake County", "Mendocino County", "Napa County", "Sonoma County", "Trinity County"),
-                               "San Francisco Bay Area" = c("Alameda County", "Contra Costa County", "Marin County", "San Francisco County", "San Mateo County", "Santa Clara County", "Solano County"),
-                               "Northern San Joaquin Valley" = c("Alpine County", "Amador County", "Calaveras County", "Madera County", "Mariposa County", "Merced County", "Mono County", "San Joaquin County", "Stanislaus County", "Tuolumne County"),
-                               "Central Coast" = c("Monterey County", "San Benito County", "San Luis Obispo County", "Santa Barbara County", "Santa Cruz County", "Ventura County"),
-                               "Southern San Joaquin Valley" = c("Fresno County", "Inyo County", "Kern County", "Kings County", "Tulare County"),
-                               "Inland Empire" = c("Riverside County", "San Bernardino County"),
-                               "Los Angeles County" = c("Los Angeles County"), 
-                               "Orange County" = c("Orange County"), 
-                               "San Diego - Imperial" = c("San Diego County", "Imperial County")))
+                               "Superior California" = c("Butte", "Colusa", "El Dorado", "Glenn", "Lassen", "Modoc", "Nevada", "Placer", "Plumas", "Sacramento", "Shasta", "Sierra", "Siskiyou", "Sutter", "Tehama", "Yolo", "Yuba"),
+                               "North Coast" = c("Del Norte", "Humboldt", "Lake", "Mendocino", "Napa", "Sonoma", "Trinity"),
+                               "San Francisco Bay Area" = c("Alameda", "Contra Costa", "Marin", "San Francisco", "San Mateo", "Santa Clara", "Solano"),
+                               "Northern San Joaquin Valley" = c("Alpine", "Amador", "Calaveras", "Madera", "Mariposa", "Merced", "Mono", "San Joaquin", "Stanislaus", "Tuolumne"),
+                               "Central Coast" = c("Monterey", "San Benito", "San Luis Obispo", "Santa Barbara", "Santa Cruz", "Ventura"),
+                               "Southern San Joaquin Valley" = c("Fresno", "Inyo", "Kern", "Kings", "Tulare"),
+                               "Inland Empire" = c("Riverside", "San Bernardino"),
+                               "Los Angeles County" = c("Los Angeles"), 
+                               "Orange County" = c("Orange"), 
+                               "San Diego - Imperial" = c("San Diego", "Imperial")))
 ```
 
 -   date (example must use functions from **lubridate**)
@@ -346,13 +361,12 @@ ca_childcare |>
 
 ```{r}
 #| label: r-3-example
-## This code comes from Lab 3 Question 10
-teacher_evals_clean |>
-  filter(question_no == 901) |>
-  group_by(teacher_id) |>
-  summarise(mean_score = mean(SET_score_avg)) |>
-  arrange(desc(mean_score)) |>
-  slice(c(1, n()))
+## This code comes from Lab 4 Question 5
+ca_childcare |>
+  filter(study_year == 2018) |>
+  group_by(region) |>
+  summarise(median_cost = median(mc_infant)) |>
+  slice_min(order_by = median_cost)
 ```
 
 -   Example of function stops
@@ -484,6 +498,13 @@ ca_childcare |>
   pivot_longer(cols = mc_infant:mc_preschool,
                names_to = "childcare_level",
                values_to = "median_cost") |>
+  mutate(across(
+    childcare_level, 
+    ~fct(., 
+            levels = c(
+              "mc_infant",
+              "mc_toddler",
+              "mc_preschool")))) |>
   ggplot(mapping = aes(
     x = study_year,
     y = median_cost,
@@ -499,11 +520,17 @@ ca_childcare |>
                                      "mc_toddler" = "Toddler"))) + 
   scale_y_continuous(limits = c(100, 500)) +
   scale_x_continuous(breaks = seq(2008, 2018, by = 2)) +
-  theme(axis.text.x = element_text(size = 6)) +
+  theme(axis.text.x = element_text(size = 6),
+        axis.text.y = element_text(size = 6),
+        legend.text = element_text(size = 7), 
+        legend.title = element_text(size = 9),
+        plot.title = element_text(size = 9),
+        strip.text = element_text(size = 9)) +
   labs(title = "Weekly Median Price for Center-Based Childcare ($)",
        x = "Study Year",
        y = NULL,
-       color = "California Region")
+       color = "California Region") +
+  coord_fixed(ratio = 0.03)
 ```
 
 **DVS-3: I show creativity in my visualizations**
@@ -630,13 +657,44 @@ teacher_evals_clean |>
 
 ```{r}
 #| label: pe-1-across
-## This code comes from Lab 3 Question 7
-teacher_evals_clean |> 
-  filter(
-    if_any(.cols = course_id:sex,
-           .fns = ~ is.na(.x)
-    )
-  )
+## This code comes from Lab 4 Question 6
+ca_childcare |>
+  pivot_longer(cols = mc_infant:mc_preschool,
+               names_to = "childcare_level",
+               values_to = "median_cost") |>
+  mutate(across(
+    childcare_level, 
+    ~fct(., 
+            levels = c(
+              "mc_infant",
+              "mc_toddler",
+              "mc_preschool")))) |>
+  ggplot(mapping = aes(
+    x = study_year,
+    y = median_cost,
+    colour = region
+  )) +
+  geom_point() +
+  geom_smooth() +
+  facet_wrap(.~ childcare_level,
+             nrow = 1,
+             labeller = labeller(childcare_level = 
+                                   c("mc_infant" = "Infant",
+                                     "mc_preschool" = "Preschool",
+                                     "mc_toddler" = "Toddler"))) + 
+  scale_y_continuous(limits = c(100, 500)) +
+  scale_x_continuous(breaks = seq(2008, 2018, by = 2)) +
+  theme(axis.text.x = element_text(size = 6),
+        axis.text.y = element_text(size = 6),
+        legend.text = element_text(size = 7), 
+        legend.title = element_text(size = 9),
+        plot.title = element_text(size = 9),
+        strip.text = element_text(size = 9)) +
+  labs(title = "Weekly Median Price for Center-Based Childcare ($)",
+       x = "Study Year",
+       y = NULL,
+       color = "California Region") +
+  coord_fixed(ratio = 0.03)
 ```
 
 -   `map()` functions

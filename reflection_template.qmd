@@ -821,7 +821,11 @@ ca_childcare |>
 
 <!-- How did you revise your thinking throughout the course? How did you revise your thinking on the code examples you have provided in your portfolio? -->
 
-I have submitted revisions for Lab 2, Lab 3, and I am currently working on the revisions for Lab 4 and Lab 5. I have left reflections on these assignments on what I did wrong and what I learned from it and how to fix them with the feedback that I received. <!-- For the revisions included in your Portfolio, to help me understand the nature of your revisions, please denote somehow the feedback I provided you (e.g., boldface, italics, colored text) before your revisions. -->
+I have submitted revisions for Lab 2, Lab 3, and I am currently working on the revisions for Lab 4 and Lab 5. I have left reflections on these assignments on what I did wrong and what I learned from it and how to fix them with the feedback that I received. On these revisions, my main goal was to learn and make improvements to my code, even if they were only small ones, so that I kept growing as a coder.
+
+<!-- For the revisions included in your Portfolio, to help me understand the nature of your revisions, please denote somehow the feedback I provided you (e.g., boldface, italics, colored text) before your revisions. -->
+
+For Lab 3, on Question 8, I got a comment stating, "**Careful! You just found that there were 297 distinct teachers included in this data. So why are your counts over 2000?"** I went back to my code and attempted to fix this issue, writing in the revision reflection comment, saying **"Question 8: The mistake that I made originally was that I managed to get the demographics of the instructors, but I did not group them by the individual teacher id's, so I had repeated counts in each category. To fix this, instead of making a new column with the general counts, I changed it to be a column that counted the distinct teacher id's, so that there would be no repeats in the counting."**
 
 ## Extending My Thinking
 
@@ -850,7 +854,10 @@ ggplot(data = surveys,
 
 ## Peer Support & Collaboration
 
-<!-- Include an image or a description of feedback you gave that you are proud of (either in a peer review or in Discord). -->![](images/Screenshot 2024-11-03 at 8.27.30 PM.png)
+<!-- Include an image or a description of feedback you gave that you are proud of (either in a peer review or in Discord). -->
+
+![](images/Screenshot 2024-11-03 at 8.27.30 PM-01.png)
 
 <!-- Include a description of how you grew as a collaborator through the weekly pair programming activities.   -->
-During the weekly practice activities, I believe that I grew as a collaborator through having to work with a partner in the roles of coder and developer. These exercises often challenged me to be an effective communicator with my partner, as well as understand their point of view when it came to using a specific type of workflow for a question as opposed to another way. Changing roles also challenged me to be able to verbalize my ideas and it made me more patient when it was my partner's turn to do the same, as I knew how hard it was to do such a thing as verbalize the ideas that were in my head. Additionally, working with someone else challenged me to be a more precise and careful coder, so that we wouldn't get caught up fixing my errors in the code and fall behind in the activity. 
+
+During the weekly practice activities, I believe that I grew as a collaborator through having to work with a partner in the roles of coder and developer. These exercises often challenged me to be an effective communicator with my partner, as well as understand their point of view when it came to using a specific type of workflow for a question as opposed to another way. Changing roles also challenged me to be able to verbalize my ideas and it made me more patient when it was my partner's turn to do the same, as I knew how hard it was to do such a thing as verbalize the ideas that were in my head. Additionally, working with someone else challenged me to be a more precise and careful coder, so that we wouldn't get caught up fixing my errors in the code and fall behind in the activity.

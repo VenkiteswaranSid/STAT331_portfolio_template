@@ -314,8 +314,7 @@ ca_childcare |>
 
 **R-1: I can create professional looking, reproducible analyses using RStudio projects, Quarto documents, and the here package.**
 
-I've done this in the following provided assignments:
-Lab 1, Lab 2, Lab 3, Lab 4, and Lab 5, as well as the respective challenges for those assignments
+I've done this in the following provided assignments: Lab 1, Lab 2, Lab 3, Lab 4, and Lab 5, as well as the respective challenges for those assignments
 
 **R-2: I can write well documented and tidy code.**
 
@@ -539,7 +538,20 @@ ca_childcare |>
 
 ```{r}
 #| label: dvs-3-1
-
+## This code comes from Lab 3 Question 2
+ggplot(data = teacher_evals_compare,
+       mapping = aes(
+         x = sen_level,
+         fill = SET_level
+         )) +
+  geom_bar() + 
+  labs(x = "Seniority of Instructor",
+       y = NULL,
+       subtitle = "Number of Sections",
+       fill = "SET Level") +
+  theme_minimal() + 
+  scale_fill_manual(values = c("Excellent" = "steelblue",
+                               "Standard" = "orange"))
 ```
 
 -   I can use annotations
@@ -578,13 +590,10 @@ teacher_evals_clean |>
 
 ```{r}
 #| label: dvs-4-across
-## This code comes from Lab 3 Question 7, but R recommended that I use if_any() instead of across() because it was more up to date
+## This code comes from Lab 3 Question 6
 teacher_evals_clean |> 
-  filter(
-    if_any(.cols = course_id:sex,
-           .fns = ~ is.na(.x)
-    )
-  )
+  summarise(across(.cols = course_id:teacher_id,
+                   .fns = ~ n_distinct(.x)))
 ```
 
 **DVS-5: I can find summaries of variables across multiple groups.**
@@ -609,7 +618,16 @@ teacher_evals_clean |>
 
 ```{r}
 #| label: dvs-6-1
-
+## This code comes from Lab 3 Question 8
+teacher_evals_clean |> 
+  select(academic_degree, 
+         seniority, 
+         sex,
+         teacher_id) |>
+  group_by(sex, 
+           academic_degree) |>
+  summarise(med_seniority = median(seniority),
+            num_teachers = n_distinct(teacher_id))
 ```
 
 -   Example 2
@@ -657,44 +675,7 @@ teacher_evals_clean |>
 
 ```{r}
 #| label: pe-1-across
-## This code comes from Lab 4 Question 6
-ca_childcare |>
-  pivot_longer(cols = mc_infant:mc_preschool,
-               names_to = "childcare_level",
-               values_to = "median_cost") |>
-  mutate(across(
-    childcare_level, 
-    ~fct(., 
-            levels = c(
-              "mc_infant",
-              "mc_toddler",
-              "mc_preschool")))) |>
-  ggplot(mapping = aes(
-    x = study_year,
-    y = median_cost,
-    colour = region
-  )) +
-  geom_point() +
-  geom_smooth() +
-  facet_wrap(.~ childcare_level,
-             nrow = 1,
-             labeller = labeller(childcare_level = 
-                                   c("mc_infant" = "Infant",
-                                     "mc_preschool" = "Preschool",
-                                     "mc_toddler" = "Toddler"))) + 
-  scale_y_continuous(limits = c(100, 500)) +
-  scale_x_continuous(breaks = seq(2008, 2018, by = 2)) +
-  theme(axis.text.x = element_text(size = 6),
-        axis.text.y = element_text(size = 6),
-        legend.text = element_text(size = 7), 
-        legend.title = element_text(size = 9),
-        plot.title = element_text(size = 9),
-        strip.text = element_text(size = 9)) +
-  labs(title = "Weekly Median Price for Center-Based Childcare ($)",
-       x = "Study Year",
-       y = NULL,
-       color = "California Region") +
-  coord_fixed(ratio = 0.03)
+
 ```
 
 -   `map()` functions
@@ -767,6 +748,13 @@ ca_childcare |>
   pivot_longer(cols = mc_infant:mc_preschool,
                names_to = "childcare_level",
                values_to = "median_cost") |>
+  mutate(across(
+    childcare_level, 
+    ~fct(., 
+            levels = c(
+              "mc_infant",
+              "mc_toddler",
+              "mc_preschool")))) |>
   ggplot(mapping = aes(
     x = study_year,
     y = median_cost,
@@ -782,11 +770,17 @@ ca_childcare |>
                                      "mc_toddler" = "Toddler"))) + 
   scale_y_continuous(limits = c(100, 500)) +
   scale_x_continuous(breaks = seq(2008, 2018, by = 2)) +
-  theme(axis.text.x = element_text(size = 6)) +
+  theme(axis.text.x = element_text(size = 6),
+        axis.text.y = element_text(size = 6),
+        legend.text = element_text(size = 7), 
+        legend.title = element_text(size = 9),
+        plot.title = element_text(size = 9),
+        strip.text = element_text(size = 9)) +
   labs(title = "Weekly Median Price for Center-Based Childcare ($)",
        x = "Study Year",
        y = NULL,
-       color = "California Region")
+       color = "California Region") +
+  coord_fixed(ratio = 0.03)
 ```
 
 ## Data Simulation & Statisical Models
@@ -827,14 +821,36 @@ ca_childcare |>
 
 <!-- How did you revise your thinking throughout the course? How did you revise your thinking on the code examples you have provided in your portfolio? -->
 
-<!-- For the revisions included in your Portfolio, to help me understand the nature of your revisions, please denote somehow the feedback I provided you (e.g., boldface, italics, colored text) before your revisions. -->
+I have submitted revisions for Lab 2, Lab 3, and I am currently working on the revisions for Lab 4 and Lab 5. I have left reflections on these assignments on what I did wrong and what I learned from it and how to fix them with the feedback that I received. <!-- For the revisions included in your Portfolio, to help me understand the nature of your revisions, please denote somehow the feedback I provided you (e.g., boldface, italics, colored text) before your revisions. -->
 
 ## Extending My Thinking
 
 <!-- How did you extended your thinking throughout the course? How did you extend your thinking on the code examples you have provided in your portfolio? -->
 
+I've made an effort to extend my thinking on the assignments given in this course. An example of this is the Challenge for Lab 2, where I was able to create a ridge plot to satisfy the Medium level.
+
+```{r}
+#| label: extending-my-thinking
+## This code comes from Challenge 2 Medium
+ggplot(data = surveys, 
+       mapping = aes(
+         x = weight, 
+         y = species, 
+         group = species)) + 
+  geom_jitter(color = "steelblue", 
+              alpha = 0.3) + 
+  geom_density_ridges(fill = "red") + 
+  labs(title = "Density Plots of Species of Rodent by Their Weight", 
+       x = "Weight (g)", 
+       y = NULL, 
+       subtitle = "Rodent Species") +
+  theme(axis.text.x = element_text(angle = 45),
+        axis.text.y = element_text(angle = 45))
+```
+
 ## Peer Support & Collaboration
 
-<!-- Include an image or a description of feedback you gave that you are proud of (either in a peer review or in Discord). -->
+<!-- Include an image or a description of feedback you gave that you are proud of (either in a peer review or in Discord). -->![](images/Screenshot 2024-11-03 at 8.27.30 PM.png)
 
 <!-- Include a description of how you grew as a collaborator through the weekly pair programming activities.   -->
+During the weekly practice activities, I believe that I grew as a collaborator through having to work with a partner in the roles of coder and developer. These exercises often challenged me to be an effective communicator with my partner, as well as understand their point of view when it came to using a specific type of workflow for a question as opposed to another way. Changing roles also challenged me to be able to verbalize my ideas and it made me more patient when it was my partner's turn to do the same, as I knew how hard it was to do such a thing as verbalize the ideas that were in my head. Additionally, working with someone else challenged me to be a more precise and careful coder, so that we wouldn't get caught up fixing my errors in the code and fall behind in the activity. 

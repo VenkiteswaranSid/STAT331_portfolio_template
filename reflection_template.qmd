@@ -95,43 +95,66 @@ teacher_evals_clean |>
 
 ```{r}
 #| label: wd-3-string
-## This came from Lab 5 in the section "Finding a Suspect"
+## This came from Lab 5 in the section "Finding a Suspect". I revised this code after the revision deadline passed.
 get_fit_now_member |>
-  full_join(get_fit_now_check_in,
+  right_join(get_fit_now_check_in,
             by = join_by("id" == "membership_id")) |>
+  mutate(check_in_date = ymd(check_in_date)) |>
   filter(membership_status == "gold",
-         str_detect(id, "48Z."),
-         ymd(check_in_date) == "2018-01-09") |>
+         year(check_in_date) == 2018,
+         month(check_in_date) == 1,
+         day(check_in_date) == 9,
+         str_starts(id, "48Z.")) |>
   inner_join(person,
-            by = join_by("person_id" == "id")) |>
+            by = join_by("person_id" == "id",
+                         "name" == "name")) |>
   inner_join(drivers_license,
              by = join_by("license_id" == "id")) |>
-  pull(name.x)
+  pull(name)
 ```
 
 -   factor
 
 ```{r}
 #| label: wd-3-factor
-
+## This came from Lab 5 in the section "Finding a Suspect". I revised this code after the revision deadline passed.
+get_fit_now_member |>
+  right_join(get_fit_now_check_in,
+            by = join_by("id" == "membership_id")) |>
+  mutate(check_in_date = ymd(check_in_date)) |>
+  filter(membership_status == "gold",
+         year(check_in_date) == 2018,
+         month(check_in_date) == 1,
+         day(check_in_date) == 9,
+         str_starts(id, "48Z.")) |>
+  inner_join(person,
+            by = join_by("person_id" == "id",
+                         "name" == "name")) |>
+  inner_join(drivers_license,
+             by = join_by("license_id" == "id")) |>
+  pull(name)
 ```
 
 -   date (example must use functions from **lubridate**)
 
 ```{r}
 #| label: wd-3-date
-## This came from Lab 5 in the section "Finding a Suspect"
+## This came from Lab 5 in the section "Finding a Suspect". I revised this code after the revision deadline passed.
 get_fit_now_member |>
-  full_join(get_fit_now_check_in,
+  right_join(get_fit_now_check_in,
             by = join_by("id" == "membership_id")) |>
+  mutate(check_in_date = ymd(check_in_date)) |>
   filter(membership_status == "gold",
-         str_detect(id, "48Z."),
-         ymd(check_in_date) == "2018-01-09") |>
+         year(check_in_date) == 2018,
+         month(check_in_date) == 1,
+         day(check_in_date) == 9,
+         str_starts(id, "48Z.")) |>
   inner_join(person,
-            by = join_by("person_id" == "id")) |>
+            by = join_by("person_id" == "id",
+                         "name" == "name")) |>
   inner_join(drivers_license,
              by = join_by("license_id" == "id")) |>
-  pull(name.x)
+  pull(name)
 ```
 
 **WD-4: I can modify existing variables and create new variables in a dataframe for a *variety* of data types (e.g., numeric, integer, character, factor, date).**
@@ -140,27 +163,46 @@ get_fit_now_member |>
 
 ```{r}
 #| label: wd-4-numeric
-
+## This code comes from Challenge 8 Question 3
+evals |>
+  mutate(sen_level = if_else(as.numeric(seniority) <= 4, 
+                            "junior", 
+                            "senior")) |>
+  distinct(teacher_id, 
+           academic_degree, 
+           sex, 
+           sen_level, 
+           .keep_all = TRUE) |>
+  pivot_longer(cols = c(academic_degree, sex, sen_level),
+               names_to = 'characteristic',
+               values_to = 'category') |>
+  count(category) |>
+  pivot_wider(names_from = category, 
+              values_from = n,
+              values_fill = 0) |>
+  rename(
+    "Female" = female,
+    "Male" = male,
+    "Junior (4 years or less)" = junior,
+    "Senior (more than 4 years)" = senior,
+    "No Degree" = no_dgr,
+    "Masters" = ma,
+    "Doctorate" = dr,
+    "Professor" = prof
+  ) |>
+  kable(format = "html") |>
+  kable_styling(bootstrap_options = "condensed",
+                position = "center") |>
+  row_spec(1, 
+           background = "#EFEFEF")
 ```
 
 -   character -- specifically a string (example must use functions from **stringr**)
 
 ```{r}
 #| label: wd-4-string
-## This code came from Lab 4 Question 3
-ca_childcare <- ca_childcare |>
-  mutate(county_name = str_remove(county_name, " County")) |>
-  mutate(region = fct_collapse(county_name,
-                               "Superior California" = c("Butte", "Colusa", "El Dorado", "Glenn", "Lassen", "Modoc", "Nevada", "Placer", "Plumas", "Sacramento", "Shasta", "Sierra", "Siskiyou", "Sutter", "Tehama", "Yolo", "Yuba"),
-                               "North Coast" = c("Del Norte", "Humboldt", "Lake", "Mendocino", "Napa", "Sonoma", "Trinity"),
-                               "San Francisco Bay Area" = c("Alameda", "Contra Costa", "Marin", "San Francisco", "San Mateo", "Santa Clara", "Solano"),
-                               "Northern San Joaquin Valley" = c("Alpine", "Amador", "Calaveras", "Madera", "Mariposa", "Merced", "Mono", "San Joaquin", "Stanislaus", "Tuolumne"),
-                               "Central Coast" = c("Monterey", "San Benito", "San Luis Obispo", "Santa Barbara", "Santa Cruz", "Ventura"),
-                               "Southern San Joaquin Valley" = c("Fresno", "Inyo", "Kern", "Kings", "Tulare"),
-                               "Inland Empire" = c("Riverside", "San Bernardino"),
-                               "Los Angeles County" = c("Los Angeles"), 
-                               "Orange County" = c("Orange"), 
-                               "San Diego - Imperial" = c("San Diego", "Imperial")))
+
+
 ```
 
 -   factor (example must use functions from **forcats**)
@@ -187,7 +229,22 @@ ca_childcare <- ca_childcare |>
 
 ```{r}
 #| label: wd-4-date
-
+## This came from Lab 5 in the section "Finding a Suspect". I revised this code after the revision deadline passed.
+get_fit_now_member |>
+  right_join(get_fit_now_check_in,
+            by = join_by("id" == "membership_id")) |>
+  mutate(check_in_date = ymd(check_in_date)) |>
+  filter(membership_status == "gold",
+         year(check_in_date) == 2018,
+         month(check_in_date) == 1,
+         day(check_in_date) == 9,
+         str_starts(id, "48Z.")) |>
+  inner_join(person,
+            by = join_by("person_id" == "id",
+                         "name" == "name")) |>
+  inner_join(drivers_license,
+             by = join_by("license_id" == "id")) |>
+  pull(name)
 ```
 
 **WD-5: I can use mutating joins to combine multiple dataframes.**
@@ -196,32 +253,56 @@ ca_childcare <- ca_childcare |>
 
 ```{r}
 #| label: wd-5-left
-
+## This code came from my revision of Lab 5 in the "Interview with Jeremy Bowers" section
+interview |> 
+  left_join(person,
+            by = join_by("person_id" == "id")) |>
+  filter(name == "Jeremy Bowers") |>
+  pull(transcript)
 ```
 
 -   `right_join()`
 
 ```{r}
 #| label: wd-5-right
-
+## This came from Lab 5 in the section "Finding a Suspect". I revised this code after the revision deadline passed.
+get_fit_now_member |>
+  right_join(get_fit_now_check_in,
+            by = join_by("id" == "membership_id")) |>
+  mutate(check_in_date = ymd(check_in_date)) |>
+  filter(membership_status == "gold",
+         year(check_in_date) == 2018,
+         month(check_in_date) == 1,
+         day(check_in_date) == 9,
+         str_starts(id, "48Z.")) |>
+  inner_join(person,
+            by = join_by("person_id" == "id",
+                         "name" == "name")) |>
+  inner_join(drivers_license,
+             by = join_by("license_id" == "id")) |>
+  pull(name)
 ```
 
 -   `inner_join()`
 
 ```{r}
 #| label: wd-5-inner
-## This code came from Lab 5 in the section "Finding a Suspect"
+## This came from Lab 5 in the section "Finding a Suspect". I revised this code after the revision deadline passed.
 get_fit_now_member |>
-  full_join(get_fit_now_check_in,
+  right_join(get_fit_now_check_in,
             by = join_by("id" == "membership_id")) |>
+  mutate(check_in_date = ymd(check_in_date)) |>
   filter(membership_status == "gold",
-         str_detect(id, "48Z."),
-         ymd(check_in_date) == "2018-01-09") |>
+         year(check_in_date) == 2018,
+         month(check_in_date) == 1,
+         day(check_in_date) == 9,
+         str_starts(id, "48Z.")) |>
   inner_join(person,
-            by = join_by("person_id" == "id")) |>
+            by = join_by("person_id" == "id",
+                         "name" == "name")) |>
   inner_join(drivers_license,
              by = join_by("license_id" == "id")) |>
-  pull(name.x)
+  pull(name)
 ```
 
 -   `full_join()`
@@ -250,17 +331,34 @@ person |>
 
 ```{r}
 #| label: wd-6-semi
-
+## This code came from my revision of Lab 5 in the "Checking Witness Interviews" section. I revised this section after the due date passed. 
+combined_interview <- bind_rows(
+  interview |>
+    semi_join(
+      person |> 
+        filter(address_street_name == "Northwestern Dr") |>
+        slice_max(order_by = address_number),
+      by = join_by("person_id" == "id")
+    ) |>
+    select(transcript),
+  
+  interview |>
+    semi_join(
+      person |> 
+        filter(address_street_name == "Franklin Ave",
+               str_detect(name, "Annabel")),
+      by = join_by("person_id" == "id")
+    ) |>
+    select(transcript)
+)
+combined_interview$transcript
 ```
 
 -   `anti_join()`
 
 ```{r}
 #| label: wd-6-anti
-## This code comes from Practice Activity 4 Question 4
-military_clean <- anti_join(military, 
-                            cont_region,
-                            by = join_by(Country == Region))
+
 ```
 
 **WD-7: I can pivot dataframes from long to wide and visa versa**
@@ -274,6 +372,13 @@ ca_childcare |>
   pivot_longer(cols = mc_infant:mc_preschool,
                names_to = "childcare_level",
                values_to = "median_cost") |>
+  mutate(across(
+    childcare_level, 
+    ~fct(., 
+            levels = c(
+              "mc_infant",
+              "mc_toddler",
+              "mc_preschool")))) |>
   ggplot(mapping = aes(
     x = study_year,
     y = median_cost,
@@ -289,11 +394,17 @@ ca_childcare |>
                                      "mc_toddler" = "Toddler"))) + 
   scale_y_continuous(limits = c(100, 500)) +
   scale_x_continuous(breaks = seq(2008, 2018, by = 2)) +
-  theme(axis.text.x = element_text(size = 6)) +
+  theme(axis.text.x = element_text(size = 6),
+        axis.text.y = element_text(size = 6),
+        legend.text = element_text(size = 7), 
+        legend.title = element_text(size = 9),
+        plot.title = element_text(size = 9),
+        strip.text = element_text(size = 9)) +
   labs(title = "Weekly Median Price for Center-Based Childcare ($)",
        x = "Study Year",
        y = NULL,
-       color = "California Region")
+       color = "California Region") +
+  coord_fixed(ratio = 0.03)
 ```
 
 -   `pivot_wider()`
@@ -351,7 +462,22 @@ ca_childcare |>
 
 ```{r}
 #| label: r-2-3
-
+## This code comes from Lab 7 Question 4
+rescale_01 <- function(input_vec) {
+  stopifnot(is.numeric(input_vec), 
+            length(input_vec) > 1)
+  
+  range_vec <- range(input_vec, na.rm = TRUE)
+  min_value <- range_vec[1]
+  max_value <- range_vec[2]
+  
+  if (min_value == max_value) {     
+    return(rep(NA,
+               length(input_vec)))  
+  }     
+    rescale_vec <- (input_vec - min_value) / (max_value - min_value)
+  return(rescale_vec)
+}
 ```
 
 **R-3: I can write robust programs that are resistant to changes in inputs.**
@@ -372,7 +498,22 @@ ca_childcare |>
 
 ```{r}
 #| label: r-3-function-stops
-
+## This code comes from Lab 7 Question 4
+rescale_01 <- function(input_vec) {
+  stopifnot(is.numeric(input_vec), 
+            length(input_vec) > 1)
+  
+  range_vec <- range(input_vec, na.rm = TRUE)
+  min_value <- range_vec[1]
+  max_value <- range_vec[2]
+  
+  if (min_value == max_value) {     
+    return(rep(NA,
+               length(input_vec)))  
+  }     
+    rescale_vec <- (input_vec - min_value) / (max_value - min_value)
+  return(rescale_vec)
+}
 ```
 
 ## Data Visualization & Summarization
@@ -440,7 +581,53 @@ ggplot(data = teacher_evals_compare,
 
 ```{r}
 #| label: dvs-2-date
+## This code comes from my revision of Lab 4 Question 6
+## This code comes from Lab 4 Question 6
+library(RColorBrewer)
+custom_palette <- colorRampPalette(brewer.pal(8, "BrBG"))(10)
 
+ca_childcare |>
+  pivot_longer(cols = mc_infant:mc_preschool,
+               names_to = "childcare_level",
+               values_to = "median_cost") |>
+  mutate(
+    across(
+      childcare_level, 
+      ~fct(., 
+           levels = c(
+             "mc_infant",
+             "mc_toddler",
+             "mc_preschool")))) |>
+  ggplot(mapping = aes(
+    x = study_year,
+    y = median_cost,
+    colour = fct_reorder2(.f = region,
+                         .x = study_year,
+                         .y = median_cost)
+  )) +
+  geom_point() +
+  geom_smooth() +
+  facet_wrap(.~ childcare_level,
+             nrow = 1,
+             labeller = labeller(childcare_level = 
+                                   c("mc_infant" = "Infant",
+                                     "mc_preschool" = "Preschool",
+                                     "mc_toddler" = "Toddler"))) + 
+  scale_y_continuous(limits = c(100, 500)) +
+  scale_x_continuous(breaks = seq(2008, 2018, by = 2)) +
+  scale_color_manual(values = custom_palette) + 
+  theme_bw() +
+  theme(axis.text.x = element_text(size = 6),
+        axis.text.y = element_text(size = 6),
+        legend.text = element_text(size = 7), 
+        legend.title = element_text(size = 9),
+        plot.title = element_text(size = 9),
+        strip.text = element_text(size = 9)) +
+  labs(title = "Weekly Median Price for Center-Based Childcare ($)",
+       x = "Study Year",
+       y = NULL,
+       color = "California Region") +
+  coord_fixed(ratio = 0.03) 
 ```
 
 **DVS-2: I use plot modifications to make my visualization clear to the reader.**
@@ -449,50 +636,111 @@ ggplot(data = teacher_evals_compare,
 
 ```{r}
 #| label: dvs-2-1
-## This code comes from Challenge 2 Medium
-ggplot(data = surveys, 
-       mapping = aes(
-         x = weight, 
-         y = species, 
-         group = species)) + 
-  geom_jitter(color = "steelblue", 
-              alpha = 0.3) + 
-  geom_density_ridges(fill = "red") + 
-  labs(title = "Density Plots of Species of Rodent by Their Weight", 
-       x = "Weight (g)", 
-       y = NULL, 
-       subtitle = "Rodent Species") +
-  theme(axis.text.x = element_text(angle = 45),
-        axis.text.y = element_text(angle = 45))
+## This code comes from my revision of Lab 4 Question 6
+library(RColorBrewer)
+custom_palette <- colorRampPalette(brewer.pal(8, "BrBG"))(10)
+
+ca_childcare |>
+  pivot_longer(cols = mc_infant:mc_preschool,
+               names_to = "childcare_level",
+               values_to = "median_cost") |>
+  mutate(
+    across(
+      childcare_level, 
+      ~fct(., 
+           levels = c(
+             "mc_infant",
+             "mc_toddler",
+             "mc_preschool")))) |>
+  ggplot(mapping = aes(
+    x = study_year,
+    y = median_cost,
+    colour = fct_reorder2(.f = region,
+                         .x = study_year,
+                         .y = median_cost)
+  )) +
+  geom_point() +
+  geom_smooth() +
+  facet_wrap(.~ childcare_level,
+             nrow = 1,
+             labeller = labeller(childcare_level = 
+                                   c("mc_infant" = "Infant",
+                                     "mc_preschool" = "Preschool",
+                                     "mc_toddler" = "Toddler"))) + 
+  scale_y_continuous(limits = c(100, 500)) +
+  scale_x_continuous(breaks = seq(2008, 2018, by = 2)) +
+  scale_color_manual(values = custom_palette) + 
+  theme_bw() +
+  theme(axis.text.x = element_text(size = 6),
+        axis.text.y = element_text(size = 6),
+        legend.text = element_text(size = 7), 
+        legend.title = element_text(size = 9),
+        plot.title = element_text(size = 9),
+        strip.text = element_text(size = 9)) +
+  labs(title = "Weekly Median Price for Center-Based Childcare ($)",
+       x = "Study Year",
+       y = NULL,
+       color = "California Region") +
+  coord_fixed(ratio = 0.03) 
 ```
 
 -   I can modify the text in my plot to be more readable
 
 ```{r}
 #| label: dvs-2-2
-## This code came from Challenge 2 Medium
-## Create the density plot
-ggplot(data = surveys, 
-       mapping = aes(
-         x = weight, 
-         y = species, 
-         group = species)) + 
-  geom_jitter(color = "steelblue", 
-              alpha = 0.3) + 
-  geom_density_ridges(fill = "red") + 
-  labs(title = "Density Plots of Species of Rodent by Their Weight", 
-       x = "Weight (g)", 
-       y = NULL, 
-       subtitle = "Rodent Species") +
-  theme(axis.text.x = element_text(angle = 45),
-        axis.text.y = element_text(angle = 45))
+## This code comes from my revision of Lab 4 Question 6
+library(RColorBrewer)
+custom_palette <- colorRampPalette(brewer.pal(8, "BrBG"))(10)
+
+ca_childcare |>
+  pivot_longer(cols = mc_infant:mc_preschool,
+               names_to = "childcare_level",
+               values_to = "median_cost") |>
+  mutate(
+    across(
+      childcare_level, 
+      ~fct(., 
+           levels = c(
+             "mc_infant",
+             "mc_toddler",
+             "mc_preschool")))) |>
+  ggplot(mapping = aes(
+    x = study_year,
+    y = median_cost,
+    colour = fct_reorder2(.f = region,
+                         .x = study_year,
+                         .y = median_cost)
+  )) +
+  geom_point() +
+  geom_smooth() +
+  facet_wrap(.~ childcare_level,
+             nrow = 1,
+             labeller = labeller(childcare_level = 
+                                   c("mc_infant" = "Infant",
+                                     "mc_preschool" = "Preschool",
+                                     "mc_toddler" = "Toddler"))) + 
+  scale_y_continuous(limits = c(100, 500)) +
+  scale_x_continuous(breaks = seq(2008, 2018, by = 2)) +
+  scale_color_manual(values = custom_palette) + 
+  theme_bw() +
+  theme(axis.text.x = element_text(size = 6),
+        axis.text.y = element_text(size = 6),
+        legend.text = element_text(size = 7), 
+        legend.title = element_text(size = 9),
+        plot.title = element_text(size = 9),
+        strip.text = element_text(size = 9)) +
+  labs(title = "Weekly Median Price for Center-Based Childcare ($)",
+       x = "Study Year",
+       y = NULL,
+       color = "California Region") +
+  coord_fixed(ratio = 0.03) 
 ```
 
 -   I can reorder my legend to align with the colors in my plot
 
 ```{r}
 #| label: dvs-2-3
-## This code comes from Lab 4 Question 6
+## This code comes from my revision of Lab 4 Question 6
 ca_childcare |>
   pivot_longer(cols = mc_infant:mc_preschool,
                names_to = "childcare_level",
@@ -538,34 +786,150 @@ ca_childcare |>
 
 ```{r}
 #| label: dvs-3-1
-## This code comes from Lab 3 Question 2
-ggplot(data = teacher_evals_compare,
-       mapping = aes(
-         x = sen_level,
-         fill = SET_level
-         )) +
-  geom_bar() + 
-  labs(x = "Seniority of Instructor",
+## This code comes from Challenge 2, Spicy. I did this after the submission date, as this was an optional part of the challenge
+cdPallette_custom <- c("#e9bda2", "#cc00cc", "#4f5c4f", "#af0f0f", "#4776e6", "#56B4E9", "#F0E442", "#D55E00")
+
+surveys |>
+  ggplot(aes(x = weight,
+             y = genus,
+             color = genus)) +
+  geom_boxplot() + 
+  annotate("text",
+           x = rep(250, 14),
+           y = c("Neotoma", 
+                     "Chaetodipus", 
+                     "Peromyscus", 
+                     "Perognathus",
+                     "Reithrodontomys", 
+                     "Sigmodon", 
+                     "Onychomys", 
+                     "Peromyscus",
+                     "Reithrodontomys",
+                     "Dipodomys", 
+                     "Dipodomys",
+                     "Chaetodipus",
+                     "Dipodomys", 
+                     "Onychomys"),
+           label = c("Neotoma", 
+                     "Chaetodipus", 
+                     "Peromyscus", 
+                     "Perognathus",
+                     "Reithrodontomys", 
+                     "Sigmodon", 
+                     "Onychomys", 
+                     "Peromyscus",
+                     "Reithrodontomys",
+                     "Dipodomys", 
+                     "Dipodomys",
+                     "Chaetodipus",
+                     "Dipodomys", 
+                     "Onychomys")) +
+  theme(legend.position = "none") +
+  labs(x = "Weight (g)",
        y = NULL,
-       subtitle = "Number of Sections",
-       fill = "SET Level") +
-  theme_minimal() + 
-  scale_fill_manual(values = c("Excellent" = "steelblue",
-                               "Standard" = "orange"))
+       subtitle = "Species of Rodent",
+       title = "Weight of Rodents Compared to Their Species, Color Coded by Genus")
 ```
 
 -   I can use annotations
 
 ```{r}
 #| label: dvs-3-2
+## This code comes from Challenge 2, Hot. I did this after the submission date, as this was an optional part of the challenge
+cdPallette_custom <- c("#e9bda2", "#cc00cc", "#4f5c4f", "#af0f0f", "#4776e6", "#56B4E9", "#F0E442", "#D55E00")
 
+surveys |>
+  ggplot(aes(x = weight,
+             y = genus,
+             color = genus)) +
+  geom_boxplot() + 
+  annotate("text",
+           x = rep(250, 14),
+           y = c("Neotoma", 
+                     "Chaetodipus", 
+                     "Peromyscus", 
+                     "Perognathus",
+                     "Reithrodontomys", 
+                     "Sigmodon", 
+                     "Onychomys", 
+                     "Peromyscus",
+                     "Reithrodontomys",
+                     "Dipodomys", 
+                     "Dipodomys",
+                     "Chaetodipus",
+                     "Dipodomys", 
+                     "Onychomys"),
+           label = c("Neotoma", 
+                     "Chaetodipus", 
+                     "Peromyscus", 
+                     "Perognathus",
+                     "Reithrodontomys", 
+                     "Sigmodon", 
+                     "Onychomys", 
+                     "Peromyscus",
+                     "Reithrodontomys",
+                     "Dipodomys", 
+                     "Dipodomys",
+                     "Chaetodipus",
+                     "Dipodomys", 
+                     "Onychomys")) +
+  theme(legend.position = "none") +
+  labs(x = "Weight (g)",
+       y = NULL,
+       subtitle = "Species of Rodent",
+       title = "Weight of Rodents Compared to Their Species, Color Coded by Genus")
 ```
 
 -   I can be creative...
 
 ```{r}
 #| label: dvs-3-3
+## This code comes from my revision of Lab 4 Question 6
+library(RColorBrewer)
+custom_palette <- colorRampPalette(brewer.pal(8, "BrBG"))(10)
 
+ca_childcare |>
+  pivot_longer(cols = mc_infant:mc_preschool,
+               names_to = "childcare_level",
+               values_to = "median_cost") |>
+  mutate(
+    across(
+      childcare_level, 
+      ~fct(., 
+           levels = c(
+             "mc_infant",
+             "mc_toddler",
+             "mc_preschool")))) |>
+  ggplot(mapping = aes(
+    x = study_year,
+    y = median_cost,
+    colour = fct_reorder2(.f = region,
+                         .x = study_year,
+                         .y = median_cost)
+  )) +
+  geom_point() +
+  geom_smooth() +
+  facet_wrap(.~ childcare_level,
+             nrow = 1,
+             labeller = labeller(childcare_level = 
+                                   c("mc_infant" = "Infant",
+                                     "mc_preschool" = "Preschool",
+                                     "mc_toddler" = "Toddler"))) + 
+  scale_y_continuous(limits = c(100, 500)) +
+  scale_x_continuous(breaks = seq(2008, 2018, by = 2)) +
+  scale_color_manual(values = custom_palette) + 
+  theme_bw() +
+  theme(axis.text.x = element_text(size = 6),
+        axis.text.y = element_text(size = 6),
+        legend.text = element_text(size = 7), 
+        legend.title = element_text(size = 9),
+        plot.title = element_text(size = 9),
+        strip.text = element_text(size = 9)) +
+  labs(title = "Weekly Median Price for Center-Based Childcare ($)",
+       x = "Study Year",
+       y = NULL,
+       color = "California Region") +
+  coord_fixed(ratio = 0.03) 
 ```
 
 **DVS-4: I can calculate numerical summaries of variables.**
@@ -602,14 +966,27 @@ teacher_evals_clean |>
 
 ```{r}
 #| label: dvs-5-1
-
+## This code comes from Lab 4 Question 4
+ca_childcare |>
+  filter(study_year == 2008 |
+           study_year == 2018) |>
+  group_by(region, study_year) |>
+  summarise(median_income = median(mhi_2018)) |>
+  pivot_wider(names_from = study_year, 
+              values_from = median_income) |>
+  arrange(by = `2018`)
 ```
 
 -   Example 2
 
 ```{r}
 #| label: dvs-5-2
-
+## This code comes from Lab 4 Question 5
+ca_childcare |>
+  filter(study_year == 2018) |>
+  group_by(region) |>
+  summarise(median_cost = median(mc_infant)) |>
+  slice_min(order_by = median_cost)
 ```
 
 **DVS-6: I can create tables which make my summaries clear to the reader.**
@@ -634,7 +1011,16 @@ teacher_evals_clean |>
 
 ```{r}
 #| label: dvs-6-2
-
+## This code comes from Lab 8 Question 4
+fish |>
+  summarize(
+    Variable = names(fish), 
+    `Missing Count` = map_int(fish, 
+                              ~ sum(is.na(.)))  
+  ) |>
+  kable(format = "html",) |>
+  kable_styling(full_width = FALSE,
+                position = "center" )
 ```
 
 **DVS-7: I show creativity in my tables.**
@@ -643,14 +1029,64 @@ teacher_evals_clean |>
 
 ```{r}
 #| label: dvs-7-1
-
+## This code comes from Lab 8 Question 3
+evals |>
+  mutate(sen_level = if_else(as.numeric(seniority) <= 4, 
+                            "junior", 
+                            "senior")) |>
+  distinct(teacher_id, 
+           academic_degree, 
+           sex, 
+           sen_level, 
+           .keep_all = TRUE) |>
+  pivot_longer(cols = c(academic_degree, sex, sen_level),
+               names_to = 'characteristic',
+               values_to = 'category') |>
+  count(category) |>
+  pivot_wider(names_from = category, 
+              values_from = n,
+              values_fill = 0) |>
+  rename(
+    "Female" = female,
+    "Male" = male,
+    "Junior (4 years or less)" = junior,
+    "Senior (more than 4 years)" = senior,
+    "No Degree" = no_dgr,
+    "Masters" = ma,
+    "Doctorate" = dr,
+    "Professor" = prof
+  ) |>
+  kable(format = "html") |>
+  kable_styling(bootstrap_options = "condensed",
+                position = "center") |>
+  row_spec(1, 
+           background = "#EFEFEF")
 ```
 
 -   Example 2
 
 ```{r}
 #| label: dvs-7-2
-
+## This code comes from Lab 9 Question 2
+enframe(results, 
+        name = "simulation_number", 
+        value = "ncorrect") |>
+  count(ncorrect) |>
+  mutate(proportion = n/10000) |>
+  select(ncorrect, proportion) |>
+  pivot_wider(
+    names_from = ncorrect,
+    values_from = proportion,
+    names_prefix = "correct_",
+    values_fill = 0
+  ) |>
+  gt() |>
+   tab_options(
+    table.border.top.style = "solid",
+    table.border.bottom.style = "solid",
+    table.width = pct(80),
+    table.background.color = "gray",
+    table.font.color = "black")
 ```
 
 ## Program Efficiency
@@ -675,14 +1111,28 @@ teacher_evals_clean |>
 
 ```{r}
 #| label: pe-1-across
-
+## This code comes from Lab 3 Question 6
+teacher_evals_clean |> 
+  summarise(across(.cols = course_id:teacher_id,
+                   .fns = ~ n_distinct(.x)))
 ```
 
 -   `map()` functions
 
 ```{r}
 #| label: pe-1-map-1
+## This code comes Lab 9 Question 1
+set.seed(5102005)
+randomBabies <- function(nBabies){
+  original_babies <- 1:nBabies
+  new_babies <- sample(nBabies)
+  correct_babies <- sum(original_babies == new_babies)
+  return(correct_babies)
+}
 
+results <- map_int(.x = 1:10000,
+                   .f = ~randomBabies(4)
+                   )
 ```
 
 **PE-2: I can write functions to reduce repetition in my code.**
@@ -691,14 +1141,36 @@ teacher_evals_clean |>
 
 ```{r}
 #| label: pe-2-1
-
+## This code comes from Lab 7 Question 3
+rescale_01 <- function(input_vec) {
+  stopifnot(is.numeric(input_vec), 
+            length(input_vec) > 1)
+  
+  range_vec <- range(input_vec, na.rm = TRUE)
+  min_value <- range_vec[1]
+  max_value <- range_vec[2]
+  
+  if (min_value == max_value) {     
+    return(rep(NA,
+               length(input_vec)))  
+  }     
+    rescale_vec <- (input_vec - min_value) / (max_value - min_value)
+  return(rescale_vec)
+}
 ```
 
 -   Function that operates on data frames
 
 ```{r}
 #| label: pe-2-2
-
+## This code comes from Lab 7 Question 8
+rescale_column <- function(sample_df, variable_vec) {
+  stopifnot(is.data.frame(sample_df))
+  sample_df <- sample_df |>
+    mutate(across(.cols = variable_vec,
+                .fns = ~rescale_01(.)))
+  return(sample_df)
+}
 ```
 
 **PE-3:I can use iteration to reduce repetition in my code.**
@@ -707,21 +1179,42 @@ teacher_evals_clean |>
 
 ```{r}
 #| label: pe-3-across
-
+## This code comes from Lab 7 Question 8
+rescale_column <- function(sample_df, variable_vec) {
+  stopifnot(is.data.frame(sample_df))
+  sample_df <- sample_df |>
+    mutate(across(.cols = variable_vec,
+                .fns = ~rescale_01(.)))
+  return(sample_df)
+}
 ```
 
 -   `map()` function with **one** input (e.g., `map()`, `map_chr()`, `map_dbl()`, etc.)
 
 ```{r}
 #| label: pe-3-map-1
-
+## This code comes from Lab 8 Question 1
+surveys |>
+  map_chr(class) |>
+  bind_rows() |>
+  kable() |>
+  kable_styling()
 ```
 
 -   `map()` function with **more than one** input (e.g., `map_2()` or `pmap()`)
 
 ```{r}
 #| label: pe-3-map-2
-
+## This code comes from Lab 9 Question 6, which I attempted after the due date as it was optional
+all_simulations <- grid |> 
+  mutate(
+    simulated_means = pmap(
+      .l = list(
+        n = n,
+        df = df), 
+      .f = simulate_means)
+    ) |> 
+  unnest(simulated_means) 
 ```
 
 **PE-4: I can use modern tools when carrying out my analysis.**
@@ -791,7 +1284,14 @@ ca_childcare |>
 
 ```{r}
 #| label: dsm-1-1
-
+## This code comes from Lab 9 Question 4, which I attempted after the due date as it was optional
+simulate_means <- function(n, df) {
+  map_dbl(.x = 1:n, 
+          .f = ~rchisq(n = 100,
+                       df = df) |>
+            mean()
+          )
+}
 ```
 
 -   Example 2
@@ -807,15 +1307,22 @@ ca_childcare |>
 
 ```{r}
 #| label: dsm-2-1
-
+## This code comes from Lab 4 Question 8 and the analysis comes from Lab 4 Question 10
+reg_mod1 <- lm(mc_infant ~ mhi_2018, data = ca_childcare)
+summary(reg_mod1)
 ```
+The p-value that we obtained from this test was 2.2e-16, which is extremely small and is less than the 0.05 significance level. Thus, this gives us extremely strong evidence against the null hypothesis that there is no relationship between median household income and median weekly cost of center based childcare for children in California. From this, we can conclude that there does appear to be a relationship between these two variables. 
 
 -   Example 2
 
 ```{r}
 #| label: dsm-2-2
+## This code comes from Lab 2 Question 17 and the analysis comes from Lab 2 Question 18
+species_mod <- aov(weight ~ species, data = surveys)
 
+summary(species_mod)
 ```
+The null hypothesis of this ANOVA test is that there is no significant difference between the weights of species, and the alternative hypothesis is that there is a significant difference between the weights of different species. Based on our p-value from the ANOVA F-test, which is 2e-16, which is a very small p-value, we have strong evidence against the null hypothesis that the population mean weight is the same across all 14 rodent species, and thus we can reject the null. Thus we can conclude that there is a significant difference between the weights of the different species of rodents.
 
 ## Revising My Thinking
 

@@ -6,16 +6,22 @@ editor: visual
 
 **Answer each of the following questions with *one sentence* including a brief explanation.**
 
-1. Finish the sentence with another student’s name: "If [Name of Student] doesn’t earn an A, then nobody should, because..." Explain your choice and your reasoning.
+1.  Finish the sentence with another student’s name: "If \[Name of Student\] doesn’t earn an A, then nobody should, because..." Explain your choice and your reasoning.
 
+2.  What was the most difficult part of the class for you? List a general topic, a specific problem, a kind of work we did, etc. and explain why.
 
-2. What was the most difficult part of the class for you? List a general topic, a specific problem, a kind of work we did, etc. and explain why.
+3.  What was the easiest part of the class for you? Explain why.
 
+4.  What part of the class surprised or interested you the most? Explain why.
 
-3. What was the easiest part of the class for you? Explain why.
+5.  Give one piece of advice to a student just beginning a quarter of STAT 331 that will help them be successful in learning.
 
+1\) If Matteo doesn't earn an A, then nobody should, because out of all of the students that I have worked with, nobody makes more of an effort to actually understand what the code is trying to accomplish than Matteo.
 
-4. What part of the class surprised or interested you the most? Explain why.
+2\) The most difficult part of the class was the section we did relating to joins. I had some trouble with this section because I didn't completely understand the rationale behind where we would use a right join or a left join, when we could just use a full join instead and have all of the internship present for us.
 
+3\) The easiest part of the class for me was the section about making plots and graphs and making them look good. This was easy for me to grasp and it was fun to find the different ways we could change the plot to be more creative.
 
-5. Give one piece of advice to a student just beginning a quarter of STAT 331 that will help them be successful in learning.
+4\) The part of the class that surprised me the most was the section related to the data simulation. This section interested me quite a bit because I was not aware of how R could be used in such a way so that we could simulate a variety of different distributions, and perform statistical analysis on them.
+
+5\) A piece of advice that I would give to a student that is starting out a quarter of STAT-331 is to not be afraid to use outside resources like stackoverflow to help build better and more efficient code. What I learned from this class is that coding is something that is best done with collaboration with others. While it is important to build the skills for oneself, looking online for resources on how to specifically improve a plot or make a piece of code more efficient can help aid a student's learning and understanding of the code too.

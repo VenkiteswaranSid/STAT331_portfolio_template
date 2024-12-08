@@ -133,6 +133,15 @@ get_fit_now_member |>
   inner_join(drivers_license,
              by = join_by("license_id" == "id")) |>
   pull(name)
+
+## This code comes from Lab 3 Question 12
+teacher_evals_clean |> 
+  filter(sex == "female",
+         academic_degree %in% c("dr", "ma")) |>
+  group_by(teacher_id) |>
+  summarise(mean_resp = mean(resp_share)) |>
+  arrange(desc(mean_resp)) |>
+  slice(c(1, n()))
 ```
 
 -   date (example must use functions from **lubridate**)

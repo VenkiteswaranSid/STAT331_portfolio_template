@@ -367,22 +367,28 @@ combined_interview$transcript
 
 ```{r}
 #| label: wd-7-long
-## This code comes from Lab 4 Question 6
+## This code comes from my revision of Lab 4 Question 6
+library(RColorBrewer)
+custom_palette <- colorRampPalette(brewer.pal(8, "BrBG"))(10)
+
 ca_childcare |>
   pivot_longer(cols = mc_infant:mc_preschool,
                names_to = "childcare_level",
                values_to = "median_cost") |>
-  mutate(across(
-    childcare_level, 
-    ~fct(., 
-            levels = c(
-              "mc_infant",
-              "mc_toddler",
-              "mc_preschool")))) |>
+  mutate(
+    across(
+      childcare_level, 
+      ~fct(., 
+           levels = c(
+             "mc_infant",
+             "mc_toddler",
+             "mc_preschool")))) |>
   ggplot(mapping = aes(
     x = study_year,
     y = median_cost,
-    colour = region
+    colour = fct_reorder2(.f = region,
+                         .x = study_year,
+                         .y = median_cost)
   )) +
   geom_point() +
   geom_smooth() +
@@ -394,6 +400,8 @@ ca_childcare |>
                                      "mc_toddler" = "Toddler"))) + 
   scale_y_continuous(limits = c(100, 500)) +
   scale_x_continuous(breaks = seq(2008, 2018, by = 2)) +
+  scale_color_manual(values = custom_palette) + 
+  theme_bw() +
   theme(axis.text.x = element_text(size = 6),
         axis.text.y = element_text(size = 6),
         legend.text = element_text(size = 7), 
@@ -404,7 +412,7 @@ ca_childcare |>
        x = "Study Year",
        y = NULL,
        color = "California Region") +
-  coord_fixed(ratio = 0.03)
+  coord_fixed(ratio = 0.03) 
 ```
 
 -   `pivot_wider()`
@@ -582,7 +590,6 @@ ggplot(data = teacher_evals_compare,
 ```{r}
 #| label: dvs-2-date
 ## This code comes from my revision of Lab 4 Question 6
-## This code comes from Lab 4 Question 6
 library(RColorBrewer)
 custom_palette <- colorRampPalette(brewer.pal(8, "BrBG"))(10)
 
@@ -741,21 +748,27 @@ ca_childcare |>
 ```{r}
 #| label: dvs-2-3
 ## This code comes from my revision of Lab 4 Question 6
+library(RColorBrewer)
+custom_palette <- colorRampPalette(brewer.pal(8, "BrBG"))(10)
+
 ca_childcare |>
   pivot_longer(cols = mc_infant:mc_preschool,
                names_to = "childcare_level",
                values_to = "median_cost") |>
-  mutate(across(
-    childcare_level, 
-    ~fct(., 
-            levels = c(
-              "mc_infant",
-              "mc_toddler",
-              "mc_preschool")))) |>
+  mutate(
+    across(
+      childcare_level, 
+      ~fct(., 
+           levels = c(
+             "mc_infant",
+             "mc_toddler",
+             "mc_preschool")))) |>
   ggplot(mapping = aes(
     x = study_year,
     y = median_cost,
-    colour = region
+    colour = fct_reorder2(.f = region,
+                         .x = study_year,
+                         .y = median_cost)
   )) +
   geom_point() +
   geom_smooth() +
@@ -767,6 +780,8 @@ ca_childcare |>
                                      "mc_toddler" = "Toddler"))) + 
   scale_y_continuous(limits = c(100, 500)) +
   scale_x_continuous(breaks = seq(2008, 2018, by = 2)) +
+  scale_color_manual(values = custom_palette) + 
+  theme_bw() +
   theme(axis.text.x = element_text(size = 6),
         axis.text.y = element_text(size = 6),
         legend.text = element_text(size = 7), 
@@ -777,7 +792,7 @@ ca_childcare |>
        x = "Study Year",
        y = NULL,
        color = "California Region") +
-  coord_fixed(ratio = 0.03)
+  coord_fixed(ratio = 0.03) 
 ```
 
 **DVS-3: I show creativity in my visualizations**
@@ -1236,22 +1251,28 @@ teacher_evals_clean |>
 
 ```{r}
 #| label: pe-4-2
-## This code comes from Lab 4 Question 6
+## This code comes from my revision of Lab 4 Question 6
+library(RColorBrewer)
+custom_palette <- colorRampPalette(brewer.pal(8, "BrBG"))(10)
+
 ca_childcare |>
   pivot_longer(cols = mc_infant:mc_preschool,
                names_to = "childcare_level",
                values_to = "median_cost") |>
-  mutate(across(
-    childcare_level, 
-    ~fct(., 
-            levels = c(
-              "mc_infant",
-              "mc_toddler",
-              "mc_preschool")))) |>
+  mutate(
+    across(
+      childcare_level, 
+      ~fct(., 
+           levels = c(
+             "mc_infant",
+             "mc_toddler",
+             "mc_preschool")))) |>
   ggplot(mapping = aes(
     x = study_year,
     y = median_cost,
-    colour = region
+    colour = fct_reorder2(.f = region,
+                         .x = study_year,
+                         .y = median_cost)
   )) +
   geom_point() +
   geom_smooth() +
@@ -1263,6 +1284,8 @@ ca_childcare |>
                                      "mc_toddler" = "Toddler"))) + 
   scale_y_continuous(limits = c(100, 500)) +
   scale_x_continuous(breaks = seq(2008, 2018, by = 2)) +
+  scale_color_manual(values = custom_palette) + 
+  theme_bw() +
   theme(axis.text.x = element_text(size = 6),
         axis.text.y = element_text(size = 6),
         legend.text = element_text(size = 7), 
@@ -1273,7 +1296,7 @@ ca_childcare |>
        x = "Study Year",
        y = NULL,
        color = "California Region") +
-  coord_fixed(ratio = 0.03)
+  coord_fixed(ratio = 0.03) 
 ```
 
 ## Data Simulation & Statisical Models
@@ -1298,7 +1321,17 @@ simulate_means <- function(n, df) {
 
 ```{r}
 #| label: dsm-1-2
+## This code comes from Lab 9 Question 1
+randomBabies <- function(nBabies){
+  original_babies <- 1:nBabies
+  new_babies <- sample(nBabies)
+  correct_babies <- sum(original_babies == new_babies)
+  return(correct_babies)
+}
 
+results <- map_int(.x = 1:10000,
+                   .f = ~randomBabies(4)
+                   )
 ```
 
 **DSSM-2: I can conduct common statistical analyses in R.**

@@ -16,7 +16,7 @@ editor: visual
 
 5.  Give one piece of advice to a student just beginning a quarter of STAT 331 that will help them be successful in learning.
 
-1\) If Matteo doesn't earn an A, then nobody should, because out of all of the students that I have worked with, nobody makes more of an effort to actually understand what the code is trying to accomplish than Matteo.
+1\) If Daniel doesn't earn an A, then nobody should, because out of all of the students that I have worked with, nobody makes more of an effort to actually understand what the code is trying to accomplish than Daniel. His willingness to keep working on his code and revise his mistakes to improve as a coder and his understanding of R is exactly the type of behavior and work ethic that is deserving of an A.
 
 2\) The most difficult part of the class was the section we did relating to joins. I had some trouble with this section because I didn't completely understand the rationale behind where we would use a right join or a left join, when we could just use a full join instead and have all of the internship present for us.
 

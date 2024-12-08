@@ -201,7 +201,20 @@ evals |>
 
 ```{r}
 #| label: wd-4-string
-
+## This code came from Lab 4 Question 3
+ca_childcare <- ca_childcare |>
+  mutate(county_name = str_remove(county_name, " County")) |>
+  mutate(region = fct_collapse(county_name,
+                               "Superior California" = c("Butte", "Colusa", "El Dorado", "Glenn", "Lassen", "Modoc", "Nevada", "Placer", "Plumas", "Sacramento", "Shasta", "Sierra", "Siskiyou", "Sutter", "Tehama", "Yolo", "Yuba"),
+                               "North Coast" = c("Del Norte", "Humboldt", "Lake", "Mendocino", "Napa", "Sonoma", "Trinity"),
+                               "San Francisco Bay Area" = c("Alameda", "Contra Costa", "Marin", "San Francisco", "San Mateo", "Santa Clara", "Solano"),
+                               "Northern San Joaquin Valley" = c("Alpine", "Amador", "Calaveras", "Madera", "Mariposa", "Merced", "Mono", "San Joaquin", "Stanislaus", "Tuolumne"),
+                               "Central Coast" = c("Monterey", "San Benito", "San Luis Obispo", "Santa Barbara", "Santa Cruz", "Ventura"),
+                               "Southern San Joaquin Valley" = c("Fresno", "Inyo", "Kern", "Kings", "Tulare"),
+                               "Inland Empire" = c("Riverside", "San Bernardino"),
+                               "Los Angeles County" = c("Los Angeles"), 
+                               "Orange County" = c("Orange"), 
+                               "San Diego - Imperial" = c("San Diego", "Imperial")))
 
 ```
 
@@ -358,7 +371,21 @@ combined_interview$transcript
 
 ```{r}
 #| label: wd-6-anti
+## This code comes from Lab 7 Question 8. I revised this after the deadline passed.
+rescale_column <- function(sample_df, cols) {
+  stopifnot(is.data.frame(sample_df))
 
+  columns_rescale = tibble(cols = cols)
+  columns_available = tibble(cols = colnames(sample_df))
+
+  missing_cols <- columns_rescale |>
+    anti_join(columns_available, by = "cols")
+  
+  sample_df <- sample_df |>
+    mutate(across({{ cols }}, rescale_01))
+
+  return (sample_df)
+}
 ```
 
 **WD-7: I can pivot dataframes from long to wide and visa versa**

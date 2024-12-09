@@ -1380,7 +1380,8 @@ results <- map_int(.x = 1:10000,
 reg_mod1 <- lm(mc_infant ~ mhi_2018, data = ca_childcare)
 summary(reg_mod1)
 ```
-The p-value that we obtained from this test was 2.2e-16, which is extremely small and is less than the 0.05 significance level. Thus, this gives us extremely strong evidence against the null hypothesis that there is no relationship between median household income and median weekly cost of center based childcare for children in California. From this, we can conclude that there does appear to be a relationship between these two variables. 
+
+The p-value that we obtained from this test was 2.2e-16, which is extremely small and is less than the 0.05 significance level. Thus, this gives us extremely strong evidence against the null hypothesis that there is no relationship between median household income and median weekly cost of center based childcare for children in California. From this, we can conclude that there does appear to be a relationship between these two variables.
 
 -   Example 2
 
@@ -1391,17 +1392,26 @@ species_mod <- aov(weight ~ species, data = surveys)
 
 summary(species_mod)
 ```
+
 The null hypothesis of this ANOVA test is that there is no significant difference between the weights of species, and the alternative hypothesis is that there is a significant difference between the weights of different species. Based on our p-value from the ANOVA F-test, which is 2e-16, which is a very small p-value, we have strong evidence against the null hypothesis that the population mean weight is the same across all 14 rodent species, and thus we can reject the null. Thus we can conclude that there is a significant difference between the weights of the different species of rodents.
 
 ## Revising My Thinking
 
 <!-- How did you revise your thinking throughout the course? How did you revise your thinking on the code examples you have provided in your portfolio? -->
 
-I have submitted revisions for Lab 2, Lab 3, and I am currently working on the revisions for Lab 4 and Lab 5. I have left reflections on these assignments on what I did wrong and what I learned from it and how to fix them with the feedback that I received. On these revisions, my main goal was to learn and make improvements to my code, even if they were only small ones, so that I kept growing as a coder.
+I have submitted revisions for Lab 2, Lab 3, and I am currently working on the revisions for Lab 4, Lab 5, Lab 6, and Lab 7. I have left reflections on these assignments on what I did wrong and what I learned from it and how to fix them with the feedback that I received. On these revisions, my main goal was to learn and make improvements to my code, even if they were only small ones, so that I kept growing as a coder.
 
 <!-- For the revisions included in your Portfolio, to help me understand the nature of your revisions, please denote somehow the feedback I provided you (e.g., boldface, italics, colored text) before your revisions. -->
 
 For Lab 3, on Question 8, I got a comment stating, "**Careful! You just found that there were 297 distinct teachers included in this data. So why are your counts over 2000?"** I went back to my code and attempted to fix this issue, writing in the revision reflection comment, saying **"Question 8: The mistake that I made originally was that I managed to get the demographics of the instructors, but I did not group them by the individual teacher id's, so I had repeated counts in each category. To fix this, instead of making a new column with the general counts, I changed it to be a column that counted the distinct teacher id's, so that there would be no repeats in the counting."**
+
+Another example of my revisions was on Lab 4 Question 6. The comments that I received on this part of the lab pertained to the creation of my plot. I revised my code to address these comments, and in my reflection, I wrote about what I learned from this, saying, **"Question 6: I had four comments on my submission. The first comment was in regard to changing the order of the facets. Initially, I had an order of infant, preschooler, and then toddler, instead of what was on the plot. This made less sense as it wasn't proceeding in terms of ages. I fixed this by using the function .fct to reorder the levels. From this, I learned exactly how forcats functions could be used to reorder the facets so that a plot makes more sense to the viewer. \
+
+The second comment I got was in regards to changing the size of the texts in my plot. Initially, I changed the size of the x axis text in my plot, but not any of the other texts in the plot. I changed this in my code by using axis.text and other related functions. From this, I learned how important it was to keep the size consistent in my plot, so that I don't strain my viewer's eyes between sizes of texts. \
+
+The third comment I had was on how to reorder the lines of the plot in the legend. I was able to do this by using the function fct_reorder2. From this, I learned how I can reorder the values within my legend and give it a signature look and order it however I want, as opposed to the default order it has. \
+
+The fourth comment I had was on using the RColorBrewer Palette and theme_bw to match the color and theme of the plot. I was able to match the theme by using theme_bw, and changing the color of the lines by using a custom color palette using RColorBrewer. From this, I learned the different uses that a theme could have on the look of a plot, as using theme_bw made my plot more appealing to look at, as well as the capabilities of using a custom color palette to give my plots a unique look as opposed to a generalized look given by R default colors."**
 
 ## Extending My Thinking
 
@@ -1432,7 +1442,7 @@ ggplot(data = surveys,
 
 <!-- Include an image or a description of feedback you gave that you are proud of (either in a peer review or in Discord). -->
 
-![](images/Screenshot 2024-11-03 at 8.27.30 PM-01.png)
+![](images/Screenshot%202024-11-03%20at%208.27.30%20PM-01.png)
 
 <!-- Include a description of how you grew as a collaborator through the weekly pair programming activities.   -->
 
